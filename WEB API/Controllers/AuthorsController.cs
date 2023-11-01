@@ -27,26 +27,57 @@ namespace WEB_API.Controllers
         {
             return _context.Authors.ToList();
         }
-
-
-
-        // POST: Authors/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        // GET: Author
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Author>> GetAuthor(int id)
         {
-            if (_context.Authors == null)
-            {
-                return Problem("Entity set 'AppDbContext.Authors'  is null.");
-            }
             var author = await _context.Authors.FindAsync(id);
-            if (author != null)
+            if(author == null)
             {
-                _context.Authors.Remove(author);
+                return NotFound();
             }
-            
+
+            return author;
+        }
+
+        // POST: Authors
+        [HttpPost]
+        public async Task<ActionResult<Author>> PostAuthor( Author author)
+        {
+            _context.Authors.Add(author);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return CreatedAtAction(nameof(GetAllAuthors), author);
+        }
+        // PUT: Authors
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutAuthor(int id, Author author)
+        {
+            if(id != author.Id)
+            {
+                return BadRequest();
+            }
+            _context.Entry(author).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch(DbUpdateConcurrencyException)
+            {
+                if (!AuthorExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+
+            }
+            return NoContent();
+
+
         }
 
         private bool AuthorExists(int id)

@@ -25,19 +25,27 @@ namespace WEB_API.Controllers
         [Route("/authors/all")]
         public IEnumerable<Author> GetAllAuthors()
         {
-            return _context.Authors.ToList();
+            return _context.Authors
+                .Include(author => author.Posts)
+                .ToList();
         }
         // GET: Author
         [HttpGet("/authors/{id}")]
-        public async Task<ActionResult<Author>> GetAuthor(int id)
+        public IActionResult GetAuthorById(int id)
         {
-            var author = await _context.Authors.FindAsync(id);
+            var author = _context.Authors
+                .Where(author => author.Id == id)
+                .Select(author => new
+                {
+                    Author = author,
+                    Posts = author.Posts
+                }).FirstOrDefault();
             if(author == null)
             {
                 return NotFound();
             }
             
-            return author;
+            return Ok(author);
         }
 
         // POST: Authors
@@ -84,7 +92,13 @@ namespace WEB_API.Controllers
         [HttpDelete("/authors/{id}")]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
+
             var author = await _context.Authors.FindAsync(id);
+            var posts = _context.Posts.Where(post => post.AuthorId == author.Id);
+            foreach (var post in posts) {
+                _context.Posts.Remove(post);
+            }
+            
             if(author == null)
             {
                 return NotFound();

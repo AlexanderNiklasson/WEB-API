@@ -125,7 +125,8 @@ namespace WEB_API.Controllers
                     title = post.title,
                     content = post.content,
                     description = post.description,
-                    AuthorName = post.Author.Name
+                    AuthorName = post.Author.Name,
+                    authorId = post.Author.Id
                 }).ToList();
             return Ok(posts);
         }

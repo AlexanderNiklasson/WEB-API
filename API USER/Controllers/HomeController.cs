@@ -45,6 +45,32 @@ namespace API_USER.Controllers
 
             
         }
+        [HttpGet]
+        public async Task <IActionResult> User(int id)
+        {
+            Console.WriteLine("Id  " + id );
+            var c = _httpClientFactory.CreateClient("api");
+            string apiEndpoint = "authors/" + id.ToString();
+
+            var response = await c.GetAsync(apiEndpoint);
+
+            
+            if(response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"{id.ToString()} {content}");
+                Author a = JsonSerializer.Deserialize<Author>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+                
+                return View(a);
+            }
+            else
+            {
+                return View("Err");
+            }
+        }
 
         public IActionResult Privacy()
         {

@@ -1,0 +1,23 @@
+﻿@model Author
+@{
+    ViewData["Title"] = @Model.Name;
+}
+
+<div>
+    <h2>@Model.Id</h2>
+    @if(Model.posts.Count < 1)
+    {
+        <h2>This author has no posts</h2>
+    }
+    else
+    {
+        foreach(var p in Model.posts)
+        {
+            <div style="border: 1px solid black;margin-bottom:5px">
+                <h2>@p.Title</h2>
+                <h3>Content: @p.Content</h3>
+                <p>Description: @p.Description</p>
+            </div>
+        }
+    }
+</div>

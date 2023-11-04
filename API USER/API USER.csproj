@@ -7,4 +7,8 @@
     <RootNamespace>API_USER</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\User\" />
+  </ItemGroup>
+
 </Project>

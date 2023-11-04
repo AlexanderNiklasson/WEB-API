@@ -11,6 +11,7 @@ namespace WEB_API.Models
         public string? content { get; set; }
         public string? description { get; set; }
         public int AuthorId { get; set; }
+
         [JsonIgnore]
         public Author? Author { get; set; }
     }

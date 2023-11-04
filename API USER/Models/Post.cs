@@ -1,4 +1,6 @@
-﻿namespace API_USER.Models
+﻿using System.Text.Json.Serialization;
+
+namespace API_USER.Models
 {
     public class Post
     {
@@ -8,8 +10,10 @@
 
         public string Description { get; set; }
 
-        public string Author { get; set; }
+
+        public string AuthorName { get; set; }
         
-        public string AuthorId { get; set; }  
+        public int AuthorId { get; set; }  
+
     }
 }

@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Post>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcomeee</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @foreach (var post in Model)
+    {
+        <div style="border: 1px solid black;margin-bottom:5px">
+            <h2>@post.Title</h2>
+            <h3>Content: @post.Content</h3>
+            <p>Description: @post.Description</p>
+            <p>
+                Author:<a asp-controller="Home" asp-action="User" asp-route-id="@post.AuthorId">
+                    @post.AuthorName
+                </a>
+            </p>
+        </div>
+    }
+
+
+</div>

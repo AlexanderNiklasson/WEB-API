@@ -5,7 +5,12 @@ VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEB API", "WEB API\WEB API.csproj", "{6E3F16C7-1583-49CC-BA81-58AA48C5AA8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API USER", "API USER\API USER.csproj", "{93EDB210-1D39-4027-8342-FA242638C76C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API USER", "API USER\API USER.csproj", "{93EDB210-1D39-4027-8342-FA242638C76C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0F2CC10D-EC95-4A84-BB93-D1F89BEF1C82}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

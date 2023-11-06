@@ -34,13 +34,11 @@ namespace WEB_API.Controllers
         public IActionResult GetAuthorById(int id)
         {
             var author = _context.Authors
-                .Where(author => author.Id == id)
-                .Select(author => new
-                {
-                    Author = author,
-                    Posts = author.Posts
-                }).FirstOrDefault();
-            if(author == null)
+                .Include(a => a.Posts)
+                .FirstOrDefault(a=> a.Id == id);
+
+
+            if (author == null)
             {
                 return NotFound();
             }

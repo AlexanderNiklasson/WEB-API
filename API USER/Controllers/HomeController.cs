@@ -19,8 +19,33 @@ namespace API_USER.Controllers
             _logger = logger;
             _httpClientFactory = httpClientFactory;
         }
+
+        public async Task<IActionResult> Index()
+        {
+            var c = _httpClientFactory.CreateClient("api");
+
+            string apiEndpoint = "authors/All";
+
+            var response = await c.GetAsync(apiEndpoint);
+
+            if(response.IsSuccessStatusCode) {
+                var content = await response.Content.ReadAsStringAsync();
+
+                List<Author> authors = JsonSerializer.Deserialize<List<Author>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive= true
+                });
+
+                return View(authors);
+            }
+            else
+            {
+                return View("Error");
+            }
+
+        }
         [HttpGet]
-        public async Task <IActionResult> Index()
+        public async Task <IActionResult> Posts()
         {
             var c = _httpClientFactory.CreateClient("api");
 

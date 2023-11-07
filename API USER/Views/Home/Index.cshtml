@@ -5,15 +5,19 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcomeee</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <ul>
+    <h1 class="display-4">Login</h1>
+    <h3>Select a user to login as</h3>
+    <ul style="list-style:none">
 
     
     @foreach (var a in Model)
     {
         <li>
-            <a href=""
+                <p>
+                    <a asp-controller="Home" asp-action="InitializeSession" asp-route-id="@a.Id">
+                        @a.Name
+                    </a>
+                </p>
         </li>
     }
     </ul>

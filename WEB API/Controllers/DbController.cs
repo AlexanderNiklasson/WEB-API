@@ -199,6 +199,24 @@ namespace WEB_API.Controllers
             return NoContent();
         }
 
+        // DELETE: Post
+        [HttpDelete("/posts/{id}")]
+        public async Task<IActionResult> DeletePost(int id)
+        {
+            var post = await _context.Posts.FindAsync(id);
+
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            _context.Posts.Remove(post);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
 
        
         private bool AuthorExists(int id)

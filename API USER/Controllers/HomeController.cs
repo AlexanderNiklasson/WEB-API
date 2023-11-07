@@ -22,6 +22,7 @@ namespace API_USER.Controllers
 
         public async Task<IActionResult> Index()
         {
+            HttpContext.Session.Clear();
             var c = _httpClientFactory.CreateClient("api");
 
             string apiEndpoint = "authors/All";
@@ -44,19 +45,26 @@ namespace API_USER.Controllers
             }
 
         }
-        [HttpGet]
+        [HttpGet("InitializeSession/{id}")]
+        public IActionResult InitializeSession(int id)
+        {
+            HttpContext.Session.SetInt32("LoggedInAuthor", id);
+            
+            return RedirectToAction("Posts");
+        }
+
+        [HttpGet("Posts")]
         public async Task <IActionResult> Posts()
         {
+            Console.WriteLine("POST, Session-id: " + HttpContext.Session.GetInt32("LoggedInAuthor"));
             var c = _httpClientFactory.CreateClient("api");
-
             string apiEndpoint = "posts";
-
             var response = await c.GetAsync(apiEndpoint);
-
+            
 
             if(response.IsSuccessStatusCode) {
                 var content = await response.Content.ReadAsStringAsync();
-           
+            
                 List<Post> posts = JsonSerializer.Deserialize<List<Post>>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -73,10 +81,9 @@ namespace API_USER.Controllers
         [HttpGet]
         public async Task <IActionResult> User(int id)
         {
-            Console.WriteLine("Id  " + id );
             var c = _httpClientFactory.CreateClient("api");
             string apiEndpoint = "authors/" + id.ToString();
-
+            
             var response = await c.GetAsync(apiEndpoint);
 
             
@@ -95,6 +102,24 @@ namespace API_USER.Controllers
             {
                 return View("Err");
             }
+        }
+        [HttpGet("DeletePost/{id}")]
+        public IActionResult DeletePost(int id)
+        {
+            var c = _httpClientFactory.CreateClient("api");
+            string apiEndpoint = "posts/" + id.ToString();
+
+            var response = c.DeleteAsync(apiEndpoint).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Posts");
+            }
+            else
+            {
+                return View("Error");
+            }
+
+            
         }
 
         public IActionResult Privacy()

@@ -177,26 +177,24 @@ namespace WEB_API.Controllers
 
         // PUT: Post
         [HttpPut("/posts/{id}")]
-        public async Task<IActionResult> PutPost(int id, Post post)
+        public async Task<IActionResult> PutPost(int id, [FromBody] Post post)
         {
-            if(id != post.id)
-            {
-                return BadRequest();
-            }
-            _context.Entry(post).State = EntityState.Modified;
+            var exPost = _context.Posts.Where(p => p.id == id).FirstOrDefault<Post>();
 
-            try
-            {
-                await _context.SaveChangesAsync();
+            if(exPost != null) {
+                exPost.title = post.title;
+                exPost.content = post.content;
+                exPost.description = post.description;
+                _context.SaveChangesAsync();
             }
-            catch(DbUpdateConcurrencyException)
+            else
             {
-                if (!PostExists(id))
-                {
-                    return NotFound();
-                }
+                return NotFound();
             }
-            return NoContent();
+            return Ok();
+
+
+
         }
 
         // DELETE: Post

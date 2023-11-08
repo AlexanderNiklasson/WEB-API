@@ -22,10 +22,13 @@
                 @if(Model.Id == loggedInId)
                 {
                     <a asp-controller="Home" asp-action="DeletePost" asp-route-id="@p.Id">Delete</a>
+                    <a asp-controller="Home" asp-action="EditPost" asp-route-id="@p.Id">Edit</a>
                 }
             </div>
         }
     }
+
+
 </div>
 
        

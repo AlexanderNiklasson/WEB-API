@@ -1,0 +1,53 @@
+﻿@model Post
+
+@{
+    ViewData["Title"] = "Update Post";
+
+}
+
+<form id="form" method="post" asp-controller="Home" asp-action="SendEditPost" asp-route-id="@Model.Id">
+    <fieldset>
+        <legend>Create Post</legend>
+    </fieldset>
+    <div>
+        <label asp-for="Title">Title:</label>
+        <input asp-for="Title" id="titleInput" value="@Model.Title"/>
+    </div>
+    <div>
+        <label asp-for="Description">Description:</label>
+        <input asp-for="Description" id="descInput" value="@Model.Description"/>
+    </div>
+    <div>
+        <label asp-for="Content">Content:</label>
+        <input asp-for="Content" id="contentInput" value="@Model.Content"/>
+    </div>
+    <div>
+        <input type="button" value="Create" class="submit" />
+    </div>
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.submit').click(function () {
+                var t = $("#titleInput").val()
+                var d = $("#descInput").val()
+                var c = $("#contentInput").val()
+                var form = document.getElementById("form")
+
+                if (t === "" || d === "" || c === "") {
+                    alert("Please fill all fields")
+                }
+                else {
+                    $("#form").submit()
+                }
+            })
+        })
+        function validation() {
+
+
+        }
+
+
+    </script>
+}

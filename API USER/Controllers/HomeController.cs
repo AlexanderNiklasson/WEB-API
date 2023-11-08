@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System;
+using System.Text;
 
 namespace API_USER.Controllers
 {
@@ -56,7 +58,6 @@ namespace API_USER.Controllers
         [HttpGet("Posts")]
         public async Task <IActionResult> Posts()
         {
-            Console.WriteLine("POST, Session-id: " + HttpContext.Session.GetInt32("LoggedInAuthor"));
             var c = _httpClientFactory.CreateClient("api");
             string apiEndpoint = "posts";
             var response = await c.GetAsync(apiEndpoint);
@@ -90,7 +91,6 @@ namespace API_USER.Controllers
             if(response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"{id.ToString()} {content}");
                 Author a = JsonSerializer.Deserialize<Author>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -112,7 +112,7 @@ namespace API_USER.Controllers
             var response = c.DeleteAsync(apiEndpoint).Result;
             if (response.IsSuccessStatusCode)
             {
-                return RedirectToAction("Posts");
+                return RedirectToAction("User", new { id = HttpContext.Session.GetInt32("LoggedInAuthor") });
             }
             else
             {
@@ -120,6 +120,85 @@ namespace API_USER.Controllers
             }
 
             
+        }
+        [HttpGet("/CreatePost")]
+        public IActionResult CreatePost()
+        {
+            var post = new Post();
+
+            return View(post);            
+        }
+        [HttpPost("/CreatePost")]
+        public async Task<IActionResult> SendPost(Post post)
+        {
+            var c = _httpClientFactory.CreateClient("api");
+            post.AuthorId = (int)HttpContext.Session.GetInt32("LoggedInAuthor");
+            string apiEndpoint = "posts";
+
+            var json = JsonSerializer.Serialize(post);
+            var body = new StringContent(json, Encoding.UTF8, "application/json");
+            
+
+            var response = await c.PostAsync(apiEndpoint, body);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("User", new { id = HttpContext.Session.GetInt32("LoggedInAuthor") });
+            }
+            else
+            {
+                return View("Error");
+            }
+        }
+
+        [HttpGet("/UpdatePost/{id}")]
+        public async Task<IActionResult> EditPost(int id)
+        {
+            var c = _httpClientFactory.CreateClient("api");
+            string apiEndpoint = "posts/" + id.ToString();
+
+            var response = await c.GetAsync(apiEndpoint);
+
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                Post p = JsonSerializer.Deserialize<Post>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return View(p);
+            }
+            else
+            {
+                return View("Err");
+            }
+
+        }
+
+        [HttpPost("/UpdatePost/{id}")]
+        public async Task<IActionResult> SendEditPost(Post post, int id)
+        {
+
+       
+            var c = _httpClientFactory.CreateClient("api");
+            string apiEndpoint = "posts/"  + id.ToString();
+
+            var json = JsonSerializer.Serialize(post);
+            var body = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+            var response = await c.PutAsync(apiEndpoint, body);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("User", new {id = HttpContext.Session.GetInt32("LoggedInAuthor")} );
+            }
+            else
+            {
+                return View("Error");
+            }
         }
 
         public IActionResult Privacy()
